@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'eventex.core',
     'eventex.subscriptions',
+    'south',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -88,3 +89,5 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = ''
 
 MEDIA_URL = ''
+
+SOUTH_TESTS_MIGRATE = False
