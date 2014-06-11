@@ -3,6 +3,7 @@ from django.test import TestCase
 from eventex.core.models import Speaker, Contact
 from django.core.exceptions import ValidationError
 
+
 class SpeakerModelTest(TestCase):
     def setUp(self):
         self.speaker = Speaker(name='Henrique Bastos',
