@@ -16,8 +16,8 @@
         <p>{% youtube talk.videos %}</p>
     {% endfor %}
 
-    {% for slide in slides %}
-        <p>{% slideshare talk.slides %}</p>
+    {% for slide in talk.slides %}
+        <p>{% slideshare slide.media_id slide.title %}</p>
     {% endfor %}
 
 {% endblock content %}
