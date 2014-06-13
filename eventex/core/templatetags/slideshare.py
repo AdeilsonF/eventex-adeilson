@@ -1,43 +1,54 @@
-# coding: utf-8
-from django.template import (Context, Template, Node, TemplateSyntaxError, Variable, VariableDoesNotExist,
-                             Library)
+from django import template
+from django.template import Context, Template, Node
+
 
 TEMPLATE = """
-<object width="480" height="385">
-    <param name="movie" value="http://slideshare.com/v/{{ id }}" />
-    <param name="allowFullScreen" value="True" />
-    <param name="allowscriptaccess" value="always" />
-    <embed src="http://www.sladeshare.com/v/{{ id }}"
-        type="application/x-shockwave-flash" allowscriptaccess="always"
-        allowfullscreen="true" width="480" height="385">
+<object id="__sse{{ id }}" width="425" height="355">
+    <param name="movie"
+    value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc={{ doc }}" />
+    <param name="allowFullScreen" value="true"/>
+    <param name="allowScriptAccess" value="always"/>
+    <embed name="__sse{{ id }}"
+        src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc={{ doc }}"
+        type="application/x-shockwave-flash"
+        allowscriptaccess="always"
+        allowfullscreen="true"
+        width="425"
+        height="355">
     </embed>
 </object>
 """
 
+
 def do_slideshare(parser, token):
     try:
         # split_contents() knows not to split quoted strings.
-        tag_name, id_ = token.split_contents()
-
+        tag_name, id_, doc = token.split_contents()
     except ValueError:
-        raise TemplateSyntaxError, "%r tag requires 1 argument" % \
-            token.contents.split()[0]
-    return SladeShareNode(id_)
+        raise template.TemplateSyntaxError, "%r tag requires 2 arguments" % token.contents.split()[0]
+    return SlideShareNode(id_, doc)
 
-class SladeShareNode(Node):
-    def __init__(self, id_):
-        self.id = Variable(id_)
+
+class SlideShareNode(Node):
+    def __init__(self, id_, doc):
+        self.id = template.Variable(id_)
+        self.doc = template.Variable(doc)
 
     def render(self, context):
         try:
             actual_id = self.id.resolve(context)
-        except VariableDoesNotExist:
+        except template.VariableDoesNotExist:
             actual_id = self.id
 
+        try:
+            actual_doc = self.doc.resolve(context)
+        except template.VariableDoesNotExist:
+            actual_doc = self.doc
+
         t = Template(TEMPLATE)
-        c = Context({'id': actual_id}, autoescape=context.autoescape)
+        c = Context({'id': actual_id, 'doc': actual_doc}, autoescape=context.autoescape)
         return t.render(c)
 
 
-register = Library()
+register = template.Library()
 register.tag('slideshare', do_slideshare)
