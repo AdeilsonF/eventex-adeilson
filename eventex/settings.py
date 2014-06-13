@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'eventex.subscriptions',
     'south',
     'eventex.myauth',
+    'flup',
 )
 
 AUTH_USER_MODEL='myauth.User'

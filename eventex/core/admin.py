@@ -1,6 +1,6 @@
 # coding: utf-8
 from django.contrib import admin
-from eventex.core.models import Speaker, Contact, Talk
+from eventex.core.models import Speaker, Contact, Talk, Course
 
 class ContactInline(admin.TabularInline):
     model = Contact
@@ -13,3 +13,4 @@ class SpeakerAdmin(admin.ModelAdmin):
 
 admin.site.register(Speaker, SpeakerAdmin)
 admin.site.register(Talk)
+admin.site.register(Course)
